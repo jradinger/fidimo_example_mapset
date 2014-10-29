@@ -1,0 +1,3 @@
+COMMAND: r.random input="example_stream@PERMANENT" n="5%" raster_output="source_populations_5percent" vector_output="source_populations_5percent"
+GISDBASE: /home/radinger/Documents/GRASS_locations
+LOCATION: fidimo_example MAPSET: PERMANENT USER: radinger DATE: Tue May 21 10:50:16 2013

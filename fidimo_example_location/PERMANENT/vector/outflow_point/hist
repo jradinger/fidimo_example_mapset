@@ -1,0 +1,3 @@
+COMMAND: v.in.ascii -n input="/home/radinger/Documents/GRASS_locations/fidimo_example/PERMANENT/.tmp/grassgis/486.0" output="outflow_point" format="point" skip=0 x=1 y=2 z=0 cat=0
+GISDBASE: /home/radinger/Documents/GRASS_locations
+LOCATION: fidimo_example MAPSET: PERMANENT USER: radinger DATE: Tue May 21 10:29:32 2013

@@ -1,0 +1,50 @@
+##################################################
+#### Preparation: Import Maps from HydroSheds ####
+##################################################
+
+# Create new location with HydroSheds projection
+# Set region
+# g.region n="48:20:00N" s="47:40:00N" w="14:30:00E" e="15:30:00E" res=0:00:03 
+# Import Hydrosheds void-filled DEM 3s
+# r.in.gdal input="/path/to/file/n45e015_dem_bil/n45e015_dem.bil" output="n45e015_dem" --overwrite
+# r.in.gdal input=/path/to/file/n45e010_dem_bil/n45e010_dem.bil output=n45e010_dem --overwrite
+
+
+##################################################
+###### Preparation: Fidimo_example dataset #######
+##################################################
+
+# Create other location (WGS84 / UTM zone 33N)
+# g.proj -c epsg=32633 location=fidimo_example
+# Change location
+# g.mapset -c mapset=PERMANENT location=fidimo_example
+
+# Set region
+g.region n=5360000 s=5270000 e=540000 w=450000 res=150                          
+
+# Get void-filled DEM reprojected r.proj
+r.proj input=n45e010_dem location=HydroSheds mapset=PERMANENT resolution=150
+r.proj input=n45e015_dem location=HydroSheds mapset=PERMANENT resolution=150
+
+# Patch raster maps within computational region                    
+r.patch input=n45e010_dem,n45e015_dem output=fidimo_example_dem
+
+# run r.watershed
+r.watershed -f --overwrite elevation=fidimo_example_dem accumulation=accumulation
+
+# stream extract
+r.stream.extract --overwrite elevation=fidimo_example_dem threshold=750 stream_rast=all_streams direction=dirs
+
+#Create outflow point (at Wieselburg)
+v.in.ascii -n stdin="510975,5331275" output=outflow_point fs=","
+
+# extract example basin
+r.stream.basins --overwrite dir=dirs points=outflow_point basins=example_basin
+
+# Extract example stream
+r.mapcalc "example_stream = example_basin && all_streams"
+
+# Create source populations
+r.random input=example_stream@PERMANENT n="5%" raster_output=source_populations_5percent vector_output=source_populations_5percent
+
+
