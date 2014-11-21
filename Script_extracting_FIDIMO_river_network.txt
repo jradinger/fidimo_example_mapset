@@ -36,7 +36,7 @@ r.watershed -f --overwrite elevation=fidimo_example_dem accumulation=accumulatio
 r.stream.extract --overwrite elevation=fidimo_example_dem threshold=750 stream_rast=all_streams direction=dirs
 
 #Create outflow point (at Wieselburg)
-v.in.ascii -n stdin="510975,5331275" output=outflow_point fs=","
+echo "510975,5331275" | v.in.ascii -n output=outflow_point fs=","
 
 # extract example basin
 r.stream.basins --overwrite dir=dirs points=outflow_point basins=example_basin
